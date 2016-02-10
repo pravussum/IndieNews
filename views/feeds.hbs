@@ -1,0 +1,11 @@
+<script src="../javascripts/jquery.js"></script>
+<script src="../javascripts/feeds.js"></script>
+<h1>Feeds</h1>
+<ul>
+    {{#each feeds}}
+        <li>{{this.key}}</li>
+    {{/each}}
+</ul>
+<input id="inputFeedUrl" type="text" size="200"  title="feedUrl"/>
+<div id="feedAddResults" />
+
