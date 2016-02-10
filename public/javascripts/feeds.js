@@ -9,4 +9,8 @@ $(function() {
         };
     });
 
+    var template = Handlebars.compile($("#tmpl_feeds").html());
+    $.get('/feeds/list', function(data) {
+        $('#feedlist').html(template(data));
+    });
 });
