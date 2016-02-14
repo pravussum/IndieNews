@@ -16,25 +16,40 @@ function renderFeeds(res) {
     });
 }
 
-function addFeed(feedUrl, userId) {
-    // check if document exists
-    couch.getDoc(feedUrl, function (err, resData) {
-        if(err) {
-            console.log('Feed ' + feedUrl + ' not found. Inserting.');
-            couch.saveDoc(feedUrl /* feedUrl as ID */,
-                {
-                    url: feedUrl,
-                    user: userId
-                },
-                function(err, resData) {
-                    if(err) return console.error(err);
-                    console.dir(resData);
-                }
-            );
-        } else {
-            console.log('Feed ' + feedUrl + ' already exists. Doing nothing.');
+function addFeed(feedUrl, userId, callback) {
+    // check if url already exists
+    couch.view('feeds', 'feedsByUrl', {key: feedUrl}, function(err, resData) {
+        if(err) return console.error(err);
+        if(resData.rows.length == 0)
+            addNewFeed(feedUrl, userId, callback);
+        else {
+            console.log('Feed with URL ' + feedUrl + ' already exists. Doing nothing.');
+            callback();
         }
     });
+}
+
+function addNewFeed(feedUrl, userId, callback) {
+
+    couch.client.uuids(1, function (err, resData) {
+        if (err) return console.error(err);
+        var uuid = resData.uuids[0];
+        saveFeed(uuid, feedUrl, userId, callback);
+    });
+}
+
+function saveFeed(uuid, feedUrl, userId, callback) {
+    couch.saveDoc(uuid,
+        {
+            url: feedUrl,
+            user: userId
+        },
+        function (err, resData) {
+            if (err) return console.error(err);
+            console.log('Successfully added feed with id ' + uuid + ' and URL ' + feedUrl);
+            callback();
+        }
+    );
 }
 
 router.get('/', function(req, res, next) {
@@ -53,8 +68,17 @@ router.get('/add', function(req, res, next) {
     couch = req.couch.db('feeds');
     var feedUrl = req.query.feedUrl;
     console.log('adding "' + feedUrl + '" as feed.');
-    addFeed(feedUrl, /* TODO fill userId*/ 1);
-    res.send('<p>Feed added: ' + feedUrl + '</p>');
+    addFeed(feedUrl, /* TODO fill userId*/ 1, function(){sendFeedsAsResult(res)});
 });
+
+function sendFeedsAsResult(res) {
+    getFeeds(function(feeds) {
+        res.send(feeds);
+    });
+}
+
+function defErrIgnResult(err) {
+    if(err) return console.error(err);
+}
 
 module.exports = router;

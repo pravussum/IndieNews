@@ -1,5 +1,10 @@
 <ul>
     {{#each feeds}}
-        <li>{{this.key}}</li>
+        <li>{{this.key}}&nbsp;
+            <button data-id="{{this.key}}" type="button" class="btn btn-default refresh-feed">
+                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                Refresh
+            </button>
+        </li>
     {{/each}}
 </ul>

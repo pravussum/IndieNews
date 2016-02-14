@@ -1,13 +1,26 @@
 var express = require('express');
 var router = express.Router();
-var FeedParser = require('feedparser'),
-    request = require('request');
+var FeedParser = require('feedparser');
+var request = require('request');
+var couch;
 
-router.get('refresh', function(req, res, next) {
+router.get('/refresh', function(req, res, next) {
+    couch = req.couch.db('articles');
+    var feedUrl = req.query.feed;
+    if(!feedUrl)
+        res.send({result: 'Parameter feed not set'});
+    readFeed(feedUrl);
+    res.send({result: 'OK'});
+    //res.render('articles', { feeds: ['feed1','anotherFeed']});
+});
 
+router.get('/', function(req, res, netxt) {
+    res.send({result: 'OK'});
+    // res.render('articles', { feeds: ['feed1','anotherFeed']});
+});
 
-
-    res.render('articles', { feeds: ['feed1','anotherFeed']});
+router.get('/test', function(req, res, next){
+    res.send({result:'Test'});
 });
 
 
