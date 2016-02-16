@@ -10,9 +10,6 @@ var feedRoute = require('./routes/feeds');
 var articleRoute = require('./routes/articles');
 var users = require('./routes/users');
 
-var nodeCouchDB = require('felix-couchdb');
-var couch = nodeCouchDB.createClient(5984, "localhost");
-
 var app = express();
 
 // view engine setup
@@ -29,7 +26,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // make db accesible to router
 app.use(function(req,res, next) {
-  req.couch = couch;
+  // set request variables with global content
   next();
 });
 

@@ -1,13 +1,22 @@
 var express = require('express');
 var router = express.Router();
-var couch;
 var util = require('util');
+var feedsDb = require('../modules/feeddb');
 
 function getFeeds(cb) {
-    couch.allDocs(function(err, resData) {
-        if(err) return console.error(err);
-        cb(resData.rows);
-    });
+    //feedsDb.allDocs({
+    //        include_docs: true
+    //    },
+    //    function(err, resData) {
+    //    if(err) return console.error(err);
+    //    cb(resData.rows);
+    //});
+    feedsDb.view('feeds', 'feedsByUrl',
+        {include_docs: true},
+        function(err, resData) {
+            if(err) return console.error(err);
+            cb(resData.rows);
+        });
 }
 
 function renderFeeds(res) {
@@ -18,7 +27,7 @@ function renderFeeds(res) {
 
 function addFeed(feedUrl, userId, callback) {
     // check if url already exists
-    couch.view('feeds', 'feedsByUrl', {key: feedUrl}, function(err, resData) {
+    feedsDb.view('feeds', 'feedsByUrl', {key: feedUrl}, function(err, resData) {
         if(err) return console.error(err);
         if(resData.rows.length == 0)
             addNewFeed(feedUrl, userId, callback);
@@ -31,7 +40,7 @@ function addFeed(feedUrl, userId, callback) {
 
 function addNewFeed(feedUrl, userId, callback) {
 
-    couch.client.uuids(1, function (err, resData) {
+    feedsDb.client.uuids(1, function (err, resData) {
         if (err) return console.error(err);
         var uuid = resData.uuids[0];
         saveFeed(uuid, feedUrl, userId, callback);
@@ -39,9 +48,10 @@ function addNewFeed(feedUrl, userId, callback) {
 }
 
 function saveFeed(uuid, feedUrl, userId, callback) {
-    couch.saveDoc(uuid,
+    feedsDb.saveDoc(uuid,
         {
             url: feedUrl,
+            name: feedUrl,
             user: userId
         },
         function (err, resData) {
@@ -53,19 +63,18 @@ function saveFeed(uuid, feedUrl, userId, callback) {
 }
 
 router.get('/', function(req, res, next) {
-    couch = req.couch.db('feeds');
     renderFeeds(res);
 });
 
 router.get('/list', function(req, res, next) {
-    couch = req.couch.db('feeds');
     getFeeds(function(feeds) {
         res.send(feeds);
     });
 });
 
+
+
 router.get('/add', function(req, res, next) {
-    couch = req.couch.db('feeds');
     var feedUrl = req.query.feedUrl;
     console.log('adding "' + feedUrl + '" as feed.');
     addFeed(feedUrl, /* TODO fill userId*/ 1, function(){sendFeedsAsResult(res)});

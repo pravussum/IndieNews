@@ -1,10 +1,17 @@
-<ul>
+<ul class="list-group">
     {{#each feeds}}
-        <li>{{this.key}}&nbsp;
-            <button data-id="{{this.key}}" type="button" class="btn btn-default refresh-feed">
-                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
-                Refresh
-            </button>
+        <li class="list-group-item show-feed" data-id="{{this.id}}">
+            <span>{{this.doc.name}} <span class="badge">20</span></span>
+
+            <div class="btn-group btn-group-sm">
+                <button data-id="{{this.id}}" type="button" class="btn btn-default refresh-feed">
+                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                </button>
+                <button data-id="{{this.id}}" type="button" class="btn btn-default delete-feed">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                </button>
+            </div>
+
         </li>
     {{/each}}
 </ul>

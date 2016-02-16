@@ -1,10 +1,53 @@
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" href="../stylesheets/bootstrap.min.css">
 <script src="../javascripts/jquery.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="../javascripts/bootstrap.min.js"></script>
 <script src="../javascripts/handlebars-v4.0.5.js"></script>
 <script src="../templates/feeds.tpl.js"></script>
+<script src="../templates/articles.tpl.js"></script>
 <script src="../javascripts/feeds.js"></script>
-<h1>Feeds</h1>
-<div id="feedlist"></div>
-<input id="inputFeedUrl" type="text" size="200"  title="feedUrl"/>
-<div id="feedAddResults" />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-4 col-md-4">
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseFeeds">
+                                Feeds
+                            </a>
+                        </h3>
+                    </div>
+                    <div class="panel-collapse collapse in" id="collapseFeeds">
+                        <div id="feedlist"></div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseMoreFeeds">
+                                More Feeds
+                            </a>
+                        </h3>
+                    </div>
+                    <div class="panel-collapse collapse in" id="collapseMoreFeeds">
+                        <div>Content with more feeds</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-8 col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Panel title</h3>
+                </div>
+                <div class="panel-body" id="articleContainer">
+                    <p>Panel body</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <input id="inputFeedUrl" type="text" style="width:100%" title="feedUrl"/>
+    </div>
+</div>

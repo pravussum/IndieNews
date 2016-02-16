@@ -1,0 +1,9 @@
+<ul class="list-group">
+    {{#each articles}}
+        <li class="list-group-item">
+            <a href="{{this.value.link}}" target="_blank">
+                <span>{{this.value.title}}</span>
+            </a>
+        </li>
+    {{/each}}
+</ul>
